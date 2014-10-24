@@ -1,17 +1,7 @@
 /** @module google-maps-image-api */
 
-var https = require( 'https' ),
-	merge = require( 'merge' ),
-	querystring = require( 'querystring' ),
+var querystring = require( 'querystring' ),
 	promise = require( 'promise' );
-
-var baseOpts = {
-
-	host: 'maps.googleapis.com',
-	path: '/maps/api/timezone/json?',
-	port: 443,
-	withCredentials: false
-};
 
 /**
  * Allows you to easily consume the Google Maps Image API.
