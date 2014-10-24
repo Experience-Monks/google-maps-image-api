@@ -24,11 +24,13 @@ var baseOpts = {
  *
  * Options passed in correlate to properties you can pass to Google Maps Image API.
  *
- * Here are parameter's you can pass through opts:
+ * Here are parameter's you can pass through opts to render a static map:
  *
  * ```javascript
  * {
  * 	//// REQUIRED ////
+ * 	type: 'staticmap', // This value is required if you want to render a static map
+ * 	
  * 	center: '40.714728,-73.998672', // This will be the center of your image. 
  * 									// It can also be a street address
  *  
@@ -73,12 +75,37 @@ var baseOpts = {
  * }
  * ```
  * 
+ * Here are the parameters you'd pass in to render a streetview:
+ * ```javascript
+ * {
+ * 	//// REQUIRED ////
+ * 	type: 'streetview',
+ * 	location: 'Toronto', // Location name or long,lat. 
+ * 						 // if you ommit location you must define pano
+ * 	pano: 'pano id', // An id for a specific panorama. If you omit 
+ * 					 // you must define a location
+ *
+ * 	//// OPTIONAL ////
+ * 	key: 'your api key', // Your Google API Key
+ * 	
+ * 	size: '320x240', // The size of your render in pixels
+ *
+ * 	heading: 45, // This is the compass heading which the camera is pointing at
+ * 				 // between 0 and 360. 0 == North
+ *
+ * 	fov: 90, // field of view expressed in degrees. (angle which determines how much you see)
+ * 			 // default is 90
+ *
+ * 	pitch: 0, // up down angle the camera is pointing at. 90 is straight up and -90 is straight down
+ * }
+ * ```
+ * 
  * @param  {Object} opts These are options that will be used to query the 
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
 
-var BASE_URL = 'https://maps.googleapis.com/maps/api/staticmap?';
+var BASE_URL = 'https://maps.googleapis.com/maps/api/';
 
 module.exports = function( opts, callback ) {
 
@@ -87,7 +114,35 @@ module.exports = function( opts, callback ) {
 
 	return new promise( function( onOK, onErr ) {
 
-		var pathStr = BASE_URL + querystring.stringify( opts );
+		if( opts.type == 'staticmap' ) {
+
+			if( opts.center === undefined ) {
+
+				doErr( 'center must be defined in options', onErr, callback );
+				return;
+			} else if( opts.type === undefined ) {
+
+				doErr( 'type must be defined in options', onErr, callback );
+				return;
+			}
+		} else if( opts.type == 'streetview' ) {
+
+			if( opts.location === undefined && opts.pano === undefined ) {
+
+				doErr( 'you must pass in location in options', onErr, callback );
+				return;
+			}
+		} else {
+
+			doErr( opts.type + ' is an invalid type. You should use "staticmap" or "streetview"', onErr, callback );
+			return;
+		}
+
+		var type, pathStr;
+
+		type = opts.type;
+		delete opts.type;
+		pathStr = BASE_URL + type + '?' + querystring.stringify( opts );
 
 		try {
 
@@ -103,12 +158,7 @@ module.exports = function( opts, callback ) {
 
 			img.onerror = function() {
 
-				var err = new Error( 'Cannot load image' );
-
-				onErr( err );
-
-				if( callback )
-					callback( err );
+				doErr( 'Cannot load image', onErr, callback );
 			};
 
 			img.src = pathStr;
@@ -118,27 +168,6 @@ module.exports = function( opts, callback ) {
 		}
 	});
 };
-
-function addToPath( opts, path, varName, optional, onErr, callback ) {
-
-	if( opts[ varName ] === undefined ) {
-
-		if( !optional ) {
-
-			doErr( varName + ' is required', onErr, callback );
-
-			return false;
-		} else {
-
-			return true;
-		}
-	} else {
-
-		path[ varName ] = opts[ varName ];
-
-		return true;
-	}
-}
 
 function doErr( msg, onErr, callback ) {
 
