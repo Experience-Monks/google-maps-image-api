@@ -100,9 +100,9 @@ var baseOpts = {
  * }
  * ```
  * 
- * @param  {Object} opts These are options that will be used to query the 
- * @param  {Function} callback [description]
- * @return {[type]}            [description]
+ * @param  {Object} opts These are options that will be used to render streetview and map images
+ * @param  {Function} callback Optionally you can use a callback over a promise. See above for details
+ * @return {Promise} A promise is returned which will return an HTMLImageElement
  */
 
 var BASE_URL = 'https://maps.googleapis.com/maps/api/';
