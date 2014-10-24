@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/Jam3/google-maps-image-api",
   "dependencies": {
+    "google-maps-image-api-url": "^1.0.0",
     "merge": "^1.2.0",
     "promise": "^6.0.1"
   }

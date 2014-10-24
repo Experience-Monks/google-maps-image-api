@@ -1,7 +1,8 @@
 /** @module google-maps-image-api */
 
 var querystring = require( 'querystring' ),
-	promise = require( 'promise' );
+	promise = require( 'promise' ),
+	url = require( 'google-maps-image-api-url' );
 
 /**
  * Allows you to easily consume the Google Maps Image API.
@@ -95,44 +96,9 @@ var querystring = require( 'querystring' ),
  * @return {Promise} A promise is returned which will return an HTMLImageElement
  */
 
-var BASE_URL = 'https://maps.googleapis.com/maps/api/';
-
 module.exports = function( opts, callback ) {
 
-	opts.zoom = opts.zoom === undefined ? 14 : opts.zoom;
-	opts.size = opts.size || '320x240';
-
 	return new promise( function( onOK, onErr ) {
-
-		if( opts.type == 'staticmap' ) {
-
-			if( opts.center === undefined ) {
-
-				doErr( 'center must be defined in options', onErr, callback );
-				return;
-			} else if( opts.type === undefined ) {
-
-				doErr( 'type must be defined in options', onErr, callback );
-				return;
-			}
-		} else if( opts.type == 'streetview' ) {
-
-			if( opts.location === undefined && opts.pano === undefined ) {
-
-				doErr( 'you must pass in location in options', onErr, callback );
-				return;
-			}
-		} else {
-
-			doErr( opts.type + ' is an invalid type. You should use "staticmap" or "streetview"', onErr, callback );
-			return;
-		}
-
-		var type, pathStr;
-
-		type = opts.type;
-		delete opts.type;
-		pathStr = BASE_URL + type + '?' + querystring.stringify( opts );
 
 		try {
 
@@ -151,7 +117,7 @@ module.exports = function( opts, callback ) {
 				doErr( 'Cannot load image', onErr, callback );
 			};
 
-			img.src = pathStr;
+			img.src = url( opts );
 		} catch( e ) {
 
 			onErr( e );
