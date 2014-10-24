@@ -1,7 +1,7 @@
 {
   "name": "google-maps-image-api",
   "version": "1.0.0",
-  "description": "This is an easy way to consume the Google Maps Image API ",
+  "description": "This is an easy way to consume the Google Maps Image API to render static maps or street views",
   "main": "index.js",
   "directories": {
     "test": "test"
