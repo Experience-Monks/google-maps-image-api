@@ -54,7 +54,7 @@ Here are parameter's you can pass through opts to render a static map:
 	// https://developers.google.com/maps/documentation/staticmaps/index#Paths
 
 	visible: 'Toronto', // you can specify locations that should be visible on the 
-				 		// rendered map. This can be either long,lat or a location name
+				 		// rendered map. This can be either lat,long or a location name
 
 	style: 'feature:administrative|element:labels|weight:3.9|visibility:on|inverse_lightness:true', 
 	// this property will change how features are rendered eg. roads, parks, etc.
